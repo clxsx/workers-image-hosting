@@ -141,23 +141,16 @@ export default {
 
 <template>
   <div id="drag" style="position:absolute; inset:0;">
-    <!-- DROP OVERLAY -->
     <div class="overlay flex_center" v-if="over_page">
       <div class="drop_text flex_center"></div>
     </div>
 
-    <!-- LOADING -->
     <Transition name="loading">
       <Loading :active="status" loader="bars" width="50" height="50" color="rgb(0,123,255)" />
     </Transition>
 
-    <!-- IMAGE GRID -->
     <div class="grid-gallery">
-      <div
-        v-for="(item, index) in file_info"
-        :key="index"
-        class="mdui-card"
-      >
+      <div v-for="(item, index) in file_info" :key="index" class="mdui-card">
         <div class="mdui-card-media">
           <img
             :src="item.link"
@@ -176,7 +169,6 @@ export default {
       </div>
     </div>
 
-    <!-- ADD BUTTON -->
     <button class="mdui-fab center" style="bottom:10px; position:fixed;" @change="file">
       <i class="mdui-icon material-icons">add</i>
       <input type="file" ref="inp" accept="image/*" multiple style="opacity:0;">
@@ -187,7 +179,6 @@ export default {
 <style>
 @import "https://cdn.jsdelivr.net/npm/viewerjs@1.11.1/dist/viewer.min.css";
 
-/* DARK BASE */
 body, html, #app, #drag {
   background: #0f0f0f;
   color: #eaeaea;
@@ -204,12 +195,11 @@ body, html, #app, #drag {
 /* CARD */
 .mdui-card {
   width: 100%;
-  height: 300px;
-  background: #161616 !important;
-  color: #eaeaea !important;
+  height: 350px; /* fixed height */
+  background: #161616;
+  color: #eaeaea;
   border-radius: 12px;
-  overflow: hidden !important;
-  box-shadow: 0 4px 18px rgba(0,0,0,.4);
+  overflow: hidden;
   display: flex;
   flex-direction: column;
 }
@@ -217,21 +207,21 @@ body, html, #app, #drag {
 /* IMAGE */
 .mdui-card-media {
   width: 100%;
-  height: 100%;
+  flex: 1 1 auto; /* take remaining space */
   position: relative;
 }
 
 .gallery-img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain; /* ✅ prevents overflow */
   display: block;
 }
 
 /* TITLE OVERLAY */
 .mdui-card-media-covered {
   position: absolute;
-  bottom: 0;
+  bottom: 50px; /* leave space for button */
   left: 0;
   width: 100%;
   padding: 10px;
@@ -239,13 +229,17 @@ body, html, #app, #drag {
 }
 
 /* BUTTONS */
+.mdui-card-actions {
+  flex-shrink: 0;
+  padding: 5px 10px;
+}
 .mdui-btn {
-  background: #3a3f8f !important;
-  color: white !important;
-  border-radius: 6px !important;
+  background: #3a3f8f;
+  color: white;
+  border-radius: 6px;
 }
 
-/* DRAG & DROP OVERLAY */
+/* DRAG & DROP */
 .overlay {
   background-color: rgba(0,0,0,0.85);
   z-index: 10;
@@ -261,7 +255,6 @@ body, html, #app, #drag {
   color: #fafafa;
   padding: 5px;
 }
-
 .drop_text:before {
   content: 'Drag the file here to upload.';
 }
