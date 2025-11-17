@@ -9,7 +9,13 @@ const img_check = new RegExp("(.*?)\\.(png|jpe?g|gif|bmp|psd|tiff|tga|webp)", "i
 export default {
   data() {
     return {
-      file_info: [],
+      file_info: [
+        // { link: "https://img.lynxxcollective16.workers.dev/api/img/HkCN6M", name: "HkCN62" },
+        // { link: "https://img.lynxxcollective16.workers.dev/api/img/HkCN6M", name: "HkCN62" },
+        // { link: "https://img.lynxxcollective16.workers.dev/api/img/HkCN6M", name: "HkCN62" },
+        // { link: "https://img.lynxxcollective16.workers.dev/api/img/HkCN6M", name: "HkCN62" },
+        // { link: "https://img.lynxxcollective16.workers.dev/api/img/HkCN6M", name: "HkCN62" }
+      ],
       status: false,
       over_page: false,
       powerby: true,
@@ -61,20 +67,23 @@ export default {
       }
 
       for (let i = 0; i < file_id.files.length; i++) {
-        if (file_id.files[i].size > 26214400 || !img_check.test(file_id.files[i].name)) {
+        const file = file_id.files[i];
+        if (file.size > 26214400 || !img_check.test(file.name)) {
           alert("File format is incorrect");
           that.status = false;
           continue;
         }
-        uplist.push(up(file_id.files[i]));
+        uplist.push(up(file));
         that.status = true;
       }
 
       Promise.all(uplist)
         .then((res) => {
           for (let i = 0; i < uplist.length; i++) {
+            const fileName = file_id.files[i].name.split(".")[0]; // name without extension
             that.file_info.push({
               link: res[i].data.link,
+              name: fileName
             });
           }
           that.status = false;
@@ -99,19 +108,22 @@ export default {
       }
 
       for (let i = 0; i < file_id.length; i++) {
-        if (file_id[i].size > 26214400 || !img_check.test(file_id[i].name)) {
+        const file = file_id[i];
+        if (file.size > 26214400 || !img_check.test(file.name)) {
           alert("File format is incorrect");
           continue;
         }
-        uplist.push(up(file_id[i]));
+        uplist.push(up(file));
         that.status = true;
       }
 
       Promise.all(uplist)
         .then((res) => {
           for (let i = 0; i < uplist.length; i++) {
+            const fileName = file_id[i].name.split(".")[0]; // name without extension
             that.file_info.push({
               link: res[i].data.link,
+              name: fileName
             });
           }
           that.status = false;
@@ -125,7 +137,7 @@ export default {
     doCopy(i) {
       navigator.clipboard.writeText(this.file_info[i].link).then(
         () => alert("Copied successfully"),
-        () => alert("Uploading…")
+        () => alert("Uploading...")
       );
     },
 
@@ -134,6 +146,7 @@ export default {
       gallery.show();
     },
   },
+
 
   components: { Loading },
 };
@@ -162,7 +175,7 @@ export default {
           />
           <div class="mdui-card-media-covered">
             <div class="mdui-card-primary">
-              <div class="mdui-card-primary-title">Picture {{ index + 1 }}</div>
+             <div class="mdui-card-primary-title">{{ item.name }}</div>
             </div>
           </div>
         </div>
@@ -229,10 +242,9 @@ body, html, #app, #drag {
 /* TITLE OVERLAY */
 .mdui-card-media-covered {
   position: absolute;
-  bottom: 50px;
   left: 0;
   width: 100%;
-  padding: 10px;
+  padding: 2px;
   background: linear-gradient(to top, rgba(0,0,0,.7), transparent);
 }
 
