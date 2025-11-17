@@ -3,7 +3,7 @@ main = "./src/index.js"
 compatibility_date = "2022-11-08"
 
 kv_namespaces = [
-  { binding = "LINK", id = "d7d86f2a1a2a4094a7f26945d6871e29",preview_id='d7d86f2a1a2a4094a7f26945d6871e29'}
+  { binding = "LINK", id = "f49a5d316c07474b869813374a7806bf",preview_id='f49a5d316c07474b869813374a7806bf'}
 ]
 [site]
 bucket = "./static/dist"
