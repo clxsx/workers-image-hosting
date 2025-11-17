@@ -197,88 +197,107 @@ export default {
 
 <style>
 @import "https://cdn.jsdelivr.net/npm/viewerjs@1.11.1/dist/viewer.min.css";
-
-/* ==== DARK MODE ==== */
+/* ==== DARK THEME BASE ==== */
 body, html, #app, #drag {
-  background: #0d0d0d;
-  color: #e5e5e5;
-  font-family: "Inter", sans-serif;
+  background: #0f0f0f;
+  color: #eaeaea;
 }
 
-/* ==== DRAG OVER ==== */
-.overlay {
-  background: rgba(0,0,0,0.8);
-  position: fixed;
-  inset: 0;
-  z-index: 10;
-  backdrop-filter: blur(3px);
-}
-
-.drop_text {
-  width: 170px;
-  height: 170px;
-  border: 2px dashed #555;
-  border-radius: 12px;
-  color: #e5e5e5;
-}
-.drop_text:before {
-  content: "Drop files to upload";
-  font-size: 14px;
-  color: #aaa;
-}
-
-/* ==== FIXED-SIZE CARD ==== */
+/* ==== FIXED-SIZE CARDS + GAP ==== */
 .mdui-card {
   width: 300px;
   height: 300px;
-  background: #161616;
+  background: #161616 !important;
+  color: #eaeaea !important;
   border-radius: 12px;
-  overflow: hidden;
+  overflow: hidden !important;
+  box-shadow: 0 4px 18px rgba(0,0,0,.4);
   display: flex;
   flex-direction: column;
-  box-shadow: 0 0 15px rgba(0,0,0,.4);
+  margin: 10px;            /* ❤️ GAP BETWEEN CARDS */
 }
 
+/* Image wrapper */
 .mdui-card-media {
   width: 100%;
   height: 100%;
   position: relative;
 }
 
+/* Image styling */
 .mdui-card-media img,
 .lazy__img[lazy=loaded] {
   width: 100%;
   height: 100%;
   object-fit: cover !important;
+  border-radius: 0 !important;
 }
 
-/* Overlay */
+/* Gradient title overlay */
 .mdui-card-media-covered {
   position: absolute;
+  left: 0;
   bottom: 0;
   width: 100%;
   padding: 10px;
   background: linear-gradient(to top, rgba(0,0,0,.7), transparent);
 }
 
-/* ==== BUTTON ==== */
-.mdui-btn {
-  width: 100%;
-  background: #3a3f8f;
-  color: white;
-  border-radius: 6px;
-  padding: 8px 0;
+/* ==== DRAG & DROP ==== */
+.drop_text {
+  border: dashed 2px #555;
+  border-radius: 10px;
+  width: 150px;
+  height: 150px;
+  color: #fafafa;
+  padding: 5px;
+}
+.drop_text:before {
+  content: 'Drag the file here to upload.';
 }
 
-/* ==== FAB ==== */
-.mdui-fab {
-  background: #3a3f8f;
-  color: white;
-  box-shadow: 0 0 16px rgba(0,0,0,.6);
-  border-radius: 50%;
+.overlay {
+  background-color: rgba(0,0,0,0.85);
+  z-index: 10;
+  position: fixed;
+  inset: 0;
 }
 
-/* Helpers */
-.flex_center { display:flex; align-items:center; justify-content:center; }
-.center { left:50%; transform:translateX(-50%); }
+.flex_center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* ==== LOADING ==== */
+.loading-enter-active,
+.loading-leave-active {
+  transition: all 0.8s ease;
+}
+.loading-enter-from,
+.loading-leave-to {
+  opacity: 0;
+}
+
+.loading {
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  padding-top: 15px;
+  z-index: 999;
+  width: 16vh;
+  position: absolute;
+  background-color: #1d1d1d;
+  color: #fafafa;
+  border-radius: 10px;
+  box-shadow: 0 0 15px rgba(0,0,0,.7);
+}
+
+.center {
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
 </style>
