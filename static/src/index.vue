@@ -1,9 +1,7 @@
 <script>
-import { LazyImg } from "vue-waterfall-plugin-next"; // only LazyImg needed
 import Loading from "vue-loading-overlay";
 import "vue-loading-overlay/dist/css/index.css";
 import "https://cdn.jsdelivr.net/npm/viewerjs@1.11.1/dist/viewer.min.js";
-
 import axios from "axios";
 
 const img_check = new RegExp("(.*?)\\.(png|jpe?g|gif|bmp|psd|tiff|tga|webp)", "i");
@@ -51,19 +49,15 @@ export default {
 
   methods: {
     file() {
-      let file_id = this.$refs.inp;
+      const file_id = this.$refs.inp;
       this.powerby = false;
       const that = this;
-      let uplist = [];
+      const uplist = [];
 
       async function up(file) {
-        let f = new FormData();
+        const f = new FormData();
         f.append("img", file);
-        return axios({
-          method: "post",
-          url: "/api",
-          data: f,
-        });
+        return axios.post("/api", f);
       }
 
       for (let i = 0; i < file_id.files.length; i++) {
@@ -72,7 +66,6 @@ export default {
           that.status = false;
           continue;
         }
-
         uplist.push(up(file_id.files[i]));
         that.status = true;
       }
@@ -87,27 +80,22 @@ export default {
           that.status = false;
         })
         .catch((err) => {
-          alert(err.response.data.info);
+          alert(err.response?.data?.info || "Upload failed");
           that.status = false;
         });
     },
 
     drop_upload(files) {
-      let file_id = files.dataTransfer.files;
+      const file_id = files.dataTransfer.files;
       this.powerby = false;
+      this.over_page = false;
+      const uplist = [];
       const that = this;
 
-      this.over_page = false;
-      let uplist = [];
-
       async function up(file) {
-        let f = new FormData();
+        const f = new FormData();
         f.append("img", file);
-        return axios({
-          method: "post",
-          url: "/api",
-          data: f,
-        });
+        return axios.post("/api", f);
       }
 
       for (let i = 0; i < file_id.length; i++) {
@@ -115,7 +103,6 @@ export default {
           alert("File format is incorrect");
           continue;
         }
-
         uplist.push(up(file_id[i]));
         that.status = true;
       }
@@ -130,7 +117,7 @@ export default {
           that.status = false;
         })
         .catch((err) => {
-          alert(err.response.data.info);
+          alert(err.response?.data?.info || "Upload failed");
           that.status = false;
         });
     },
@@ -148,7 +135,7 @@ export default {
     },
   },
 
-  components: { LazyImg, Loading },
+  components: { Loading },
 };
 </script>
 
@@ -164,7 +151,7 @@ export default {
       <Loading :active="status" loader="bars" width="50" height="50" color="rgb(0,123,255)" />
     </Transition>
 
-    <!-- NEW GRID GALLERY -->
+    <!-- IMAGE GRID -->
     <div class="grid-gallery">
       <div
         v-for="(item, index) in file_info"
@@ -172,15 +159,17 @@ export default {
         class="mdui-card"
       >
         <div class="mdui-card-media">
-          <LazyImg :url="item.link" @click="display($event.target)" />
-
+          <img
+            :src="item.link"
+            class="gallery-img"
+            @click="display($event.target)"
+          />
           <div class="mdui-card-media-covered">
             <div class="mdui-card-primary">
-              <div class="mdui-card-primary-title">Picture {{ index }}</div>
+              <div class="mdui-card-primary-title">Picture {{ index + 1 }}</div>
             </div>
           </div>
         </div>
-
         <div class="mdui-card-actions">
           <button class="mdui-btn" @click="doCopy(index)">Copy</button>
         </div>
@@ -204,7 +193,7 @@ body, html, #app, #drag {
   color: #eaeaea;
 }
 
-/* --- GRID LAYOUT --- */
+/* GRID LAYOUT */
 .grid-gallery {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -212,7 +201,7 @@ body, html, #app, #drag {
   padding: 15px;
 }
 
-/* FIXED CARD STYLE */
+/* CARD */
 .mdui-card {
   width: 100%;
   height: 300px;
@@ -225,22 +214,21 @@ body, html, #app, #drag {
   flex-direction: column;
 }
 
-/* Image container */
+/* IMAGE */
 .mdui-card-media {
   width: 100%;
   height: 100%;
   position: relative;
 }
 
-/* Image display */
-.mdui-card-media img,
-.lazy__img[lazy=loaded] {
+.gallery-img {
   width: 100%;
   height: 100%;
-  object-fit: cover !important;
+  object-fit: cover;
+  display: block;
 }
 
-/* Overlay */
+/* TITLE OVERLAY */
 .mdui-card-media-covered {
   position: absolute;
   bottom: 0;
@@ -250,14 +238,14 @@ body, html, #app, #drag {
   background: linear-gradient(to top, rgba(0,0,0,.7), transparent);
 }
 
-/* Buttons */
+/* BUTTONS */
 .mdui-btn {
   background: #3a3f8f !important;
   color: white !important;
   border-radius: 6px !important;
 }
 
-/* Drag overlay */
+/* DRAG & DROP OVERLAY */
 .overlay {
   background-color: rgba(0,0,0,0.85);
   z-index: 10;
@@ -284,7 +272,7 @@ body, html, #app, #drag {
   align-items: center;
 }
 
-/* Loading animation */
+/* LOADING */
 .loading-enter-active,
 .loading-leave-active {
   transition: all 0.8s ease;
