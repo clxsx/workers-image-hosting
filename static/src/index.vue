@@ -199,33 +199,37 @@ body, html, #app, #drag {
 /* CARD */
 .mdui-card {
   width: 100%;
-  height: 350px; /* fixed height */
+  height: 350px; /* fixed card height */
   background: #161616;
   color: #eaeaea;
   border-radius: 12px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 10px; /* space for button */
 }
 
 /* IMAGE */
 .mdui-card-media {
   width: 100%;
   flex: 1 1 auto;
-  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .gallery-img {
-  width: 100%;
-  max-height: calc(100% - 50px); /* reserve space for button */
-  object-fit: contain; /* prevent overflow */
-  display: block;
+  width: 300px;
+  height: 300px;
+  object-fit: cover;
 }
 
 /* TITLE OVERLAY */
 .mdui-card-media-covered {
   position: absolute;
-  bottom: 50px; /* leave space for button */
+  bottom: 50px;
   left: 0;
   width: 100%;
   padding: 10px;
