@@ -1,8 +1,7 @@
 <script>
-import { LazyImg, Waterfall } from "vue-waterfall-plugin-next";
+import { LazyImg } from "vue-waterfall-plugin-next"; // only LazyImg needed
 import Loading from "vue-loading-overlay";
 import "vue-loading-overlay/dist/css/index.css";
-import "vue-waterfall-plugin-next/style.css";
 import "https://cdn.jsdelivr.net/npm/viewerjs@1.11.1/dist/viewer.min.js";
 
 import axios from "axios";
@@ -16,12 +15,6 @@ export default {
       status: false,
       over_page: false,
       powerby: true,
-
-      breakpoints: {
-        1200: { rowPerView: 3 },
-        900: { rowPerView: 2 },
-        600: { rowPerView: 1 },
-      },
     };
   },
 
@@ -122,8 +115,9 @@ export default {
           alert("File format is incorrect");
           continue;
         }
-        that.status = true;
+
         uplist.push(up(file_id[i]));
+        that.status = true;
       }
 
       Promise.all(uplist)
@@ -154,40 +148,46 @@ export default {
     },
   },
 
-  components: { Waterfall, LazyImg, Loading },
+  components: { LazyImg, Loading },
 };
 </script>
 
 <template>
   <div id="drag" style="position:absolute; inset:0;">
+    <!-- DROP OVERLAY -->
     <div class="overlay flex_center" v-if="over_page">
       <div class="drop_text flex_center"></div>
     </div>
 
+    <!-- LOADING -->
     <Transition name="loading">
       <Loading :active="status" loader="bars" width="50" height="50" color="rgb(0,123,255)" />
     </Transition>
 
-    <Waterfall :list="file_info" :breakpoints="breakpoints" id="images">
-      <template #item="{ item, index }">
-        <div class="mdui-card">
-          <div class="mdui-card-media">
-            <LazyImg :url="item.link" @click="display($event.target)" />
+    <!-- NEW GRID GALLERY -->
+    <div class="grid-gallery">
+      <div
+        v-for="(item, index) in file_info"
+        :key="index"
+        class="mdui-card"
+      >
+        <div class="mdui-card-media">
+          <LazyImg :url="item.link" @click="display($event.target)" />
 
-            <div class="mdui-card-media-covered">
-              <div class="mdui-card-primary">
-                <div class="mdui-card-primary-title">Picture {{ index }}</div>
-              </div>
+          <div class="mdui-card-media-covered">
+            <div class="mdui-card-primary">
+              <div class="mdui-card-primary-title">Picture {{ index }}</div>
             </div>
           </div>
-
-          <div class="mdui-card-actions">
-            <button class="mdui-btn" @click="doCopy(index)">Copy</button>
-          </div>
         </div>
-      </template>
-    </Waterfall>
 
+        <div class="mdui-card-actions">
+          <button class="mdui-btn" @click="doCopy(index)">Copy</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ADD BUTTON -->
     <button class="mdui-fab center" style="bottom:10px; position:fixed;" @change="file">
       <i class="mdui-icon material-icons">add</i>
       <input type="file" ref="inp" accept="image/*" multiple style="opacity:0;">
@@ -197,15 +197,24 @@ export default {
 
 <style>
 @import "https://cdn.jsdelivr.net/npm/viewerjs@1.11.1/dist/viewer.min.css";
-/* ==== DARK THEME BASE ==== */
+
+/* DARK BASE */
 body, html, #app, #drag {
   background: #0f0f0f;
   color: #eaeaea;
 }
 
-/* ==== FIXED-SIZE CARDS + GAP ==== */
+/* --- GRID LAYOUT --- */
+.grid-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 15px;
+  padding: 15px;
+}
+
+/* FIXED CARD STYLE */
 .mdui-card {
-  width: 300px;
+  width: 100%;
   height: 300px;
   background: #161616 !important;
   color: #eaeaea !important;
@@ -214,36 +223,48 @@ body, html, #app, #drag {
   box-shadow: 0 4px 18px rgba(0,0,0,.4);
   display: flex;
   flex-direction: column;
-  margin: 10px;            /* ❤️ GAP BETWEEN CARDS */
 }
 
-/* Image wrapper */
+/* Image container */
 .mdui-card-media {
   width: 100%;
   height: 100%;
   position: relative;
 }
 
-/* Image styling */
+/* Image display */
 .mdui-card-media img,
 .lazy__img[lazy=loaded] {
   width: 100%;
   height: 100%;
   object-fit: cover !important;
-  border-radius: 0 !important;
 }
 
-/* Gradient title overlay */
+/* Overlay */
 .mdui-card-media-covered {
   position: absolute;
-  left: 0;
   bottom: 0;
+  left: 0;
   width: 100%;
   padding: 10px;
   background: linear-gradient(to top, rgba(0,0,0,.7), transparent);
 }
 
-/* ==== DRAG & DROP ==== */
+/* Buttons */
+.mdui-btn {
+  background: #3a3f8f !important;
+  color: white !important;
+  border-radius: 6px !important;
+}
+
+/* Drag overlay */
+.overlay {
+  background-color: rgba(0,0,0,0.85);
+  z-index: 10;
+  position: fixed;
+  inset: 0;
+}
+
 .drop_text {
   border: dashed 2px #555;
   border-radius: 10px;
@@ -252,15 +273,9 @@ body, html, #app, #drag {
   color: #fafafa;
   padding: 5px;
 }
+
 .drop_text:before {
   content: 'Drag the file here to upload.';
-}
-
-.overlay {
-  background-color: rgba(0,0,0,0.85);
-  z-index: 10;
-  position: fixed;
-  inset: 0;
 }
 
 .flex_center {
@@ -269,7 +284,7 @@ body, html, #app, #drag {
   align-items: center;
 }
 
-/* ==== LOADING ==== */
+/* Loading animation */
 .loading-enter-active,
 .loading-leave-active {
   transition: all 0.8s ease;
@@ -279,25 +294,9 @@ body, html, #app, #drag {
   opacity: 0;
 }
 
-.loading {
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  text-align: center;
-  padding-top: 15px;
-  z-index: 999;
-  width: 16vh;
-  position: absolute;
-  background-color: #1d1d1d;
-  color: #fafafa;
-  border-radius: 10px;
-  box-shadow: 0 0 15px rgba(0,0,0,.7);
-}
-
 .center {
   position: absolute;
   left: 50%;
   transform: translate(-50%, -50%);
 }
-
 </style>
