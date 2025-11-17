@@ -141,14 +141,17 @@ export default {
 
 <template>
   <div id="drag" style="position:absolute; inset:0;">
+    <!-- DROP OVERLAY -->
     <div class="overlay flex_center" v-if="over_page">
       <div class="drop_text flex_center"></div>
     </div>
 
+    <!-- LOADING -->
     <Transition name="loading">
       <Loading :active="status" loader="bars" width="50" height="50" color="rgb(0,123,255)" />
     </Transition>
 
+    <!-- IMAGE GRID -->
     <div class="grid-gallery">
       <div v-for="(item, index) in file_info" :key="index" class="mdui-card">
         <div class="mdui-card-media">
@@ -169,6 +172,7 @@ export default {
       </div>
     </div>
 
+    <!-- ADD BUTTON -->
     <button class="mdui-fab center" style="bottom:10px; position:fixed;" @change="file">
       <i class="mdui-icon material-icons">add</i>
       <input type="file" ref="inp" accept="image/*" multiple style="opacity:0;">
@@ -207,14 +211,14 @@ body, html, #app, #drag {
 /* IMAGE */
 .mdui-card-media {
   width: 100%;
-  flex: 1 1 auto; /* take remaining space */
+  flex: 1 1 auto;
   position: relative;
 }
 
 .gallery-img {
   width: 100%;
-  height: 100%;
-  object-fit: contain; /* ✅ prevents overflow */
+  max-height: calc(100% - 50px); /* reserve space for button */
+  object-fit: contain; /* prevent overflow */
   display: block;
 }
 
