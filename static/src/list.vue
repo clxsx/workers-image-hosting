@@ -9,15 +9,15 @@ export default{
         return{
         list:[],
         auth:true,
-        pass:'',
+        pass:'tanginamo',
         breakpoints: {
-  1200: { //当屏幕宽度小于等于1200
+  1200: {
     rowPerView: 4,
   },
-  800: { //当屏幕宽度小于等于800
+  800: { 
     rowPerView: 3,
   },
-  500: { //当屏幕宽度小于等于500
+  500: {
     rowPerView: 2,
   }
 }
@@ -43,7 +43,7 @@ export default{
             })
             
         }).catch((err)=>{
-          alert('密码错误')
+          alert('Wrong password')
         })
     },
     display(e){
@@ -53,9 +53,9 @@ export default{
 
     doCopy(e) {
         this.$copyText(`${window.location.origin}/api/img/`+this.list[e].name).then(()=>{
-          mdui.alert('复制成功')
+          mdui.alert('Copied successfully')
         },()=>{
-          mdui.alert('失败')
+          mdui.alert('Failed')
         }
         )
       }
@@ -72,7 +72,7 @@ export default{
     <div class="mdui-textfield mdui-textfield-floating-label center" style="top:30%" v-if="auth">
   <label class="mdui-textfield-label">PASSWORD</label>
   <input class="mdui-textfield-input" v-model="pass" type="password" @keyup.enter="query"/>
-  <button class="mdui-btn mdui-btn-raised mdui-color-indigo mdui-text-color-white" style="margin-top: 10px;" @click="query">生成</button>
+  <button class="mdui-btn mdui-btn-raised mdui-color-indigo mdui-text-color-white" style="margin-top: 10px;" @click="query">Generate</button>
 </div>
     </Transition>
 <Waterfall :list="this.list" :breakpoints="breakpoints" id="images" v-if="!auth">
@@ -87,7 +87,7 @@ export default{
     </div>
   </div>
   <div class="mdui-card-actions">
-    <button class="mdui-btn mdui-ripple mdui-color-indigo mdui-text-color-white" @click="doCopy(index)">复制</button>
+    <button class="mdui-btn mdui-ripple mdui-color-indigo mdui-text-color-white" @click="doCopy(index)">Copy</button>
   </div>
 </div>
   </template>
