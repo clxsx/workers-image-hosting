@@ -248,6 +248,15 @@ body, html, #app, #drag {
   background: linear-gradient(to top, rgba(0,0,0,.7), transparent);
 }
 
+.mdui-card-primary-title {
+  color: white !important;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  overflow: hidden;       /* Hide overflowing text */
+  text-overflow: ellipsis; /* Show "..." if text is too long */
+  white-space: nowrap;    /* Prevent wrapping to new line */
+}
+
 /* BUTTONS */
 .mdui-card-actions {
   flex-shrink: 0;
